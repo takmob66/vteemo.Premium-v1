@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+/* Font families */
+.font-fa {
+  font-family: 'Vazirmatn', sans-serif;
+}
+
+.font-en {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-ar {
+  font-family: 'Noto Sans Arabic', sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6A0DAD;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4B0082;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-pulse-custom {
+  animation: pulse 2s infinite;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-purple {
+  background: linear-gradient(135deg, #6A0DAD 0%, #4B0082 100%);
+}
+
+.bg-gradient-gold {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.bg-gradient-purple-light {
+  background: linear-gradient(135deg, #E6E6FA 0%, #DDA0DD 100%);
+}
+
+/* Glass effect */
+.glass-effect {
+  background: rgba(106, 13, 173, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(106, 13, 173, 0.2);
+}
+
+/* Premium card effect */
+.premium-card {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+  transform: perspective(1000px) rotateX(5deg);
+  transition: all 0.3s ease;
+}
+
+.premium-card:hover {
+  transform: perspective(1000px) rotateX(0deg) translateY(-10px);
+  box-shadow: 0 30px 60px rgba(255, 215, 0, 0.4);
+}
+
+/* Video card hover effects */
+.video-card {
+  transition: all 0.3s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(106, 13, 173, 0.3);
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105;
+}
+
+.btn-secondary {
+  @apply bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+}
+
+.btn-gold {
+  @apply bg-gradient-gold text-gray-900 font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl;
+}
+
+/* Loading spinner */
+.spinner {
+  border: 3px solid rgba(106, 13, 173, 0.3);
+  border-radius: 50%;
+  border-top: 3px solid #6A0DAD;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* RTL support */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Custom utilities */
+.text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.border-gradient {
+  border: 2px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, #6A0DAD, #FFD700) border-box;
+}
+
+/* Responsive text */
+@media (max-width: 640px) {
+  .text-responsive {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 641px) {
+  .text-responsive {
+    font-size: 1rem;
+  }
+}
+
+/* Dark theme adjustments */
+.dark {
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #16213e;
+  --text-primary: #ffffff;
+  --text-secondary: #e5e7eb;
+  --text-muted: #9ca3af;
+}
+
+/* Light theme for premium sections */
+.light-section {
+  background: linear-gradient(135deg, #FFECB3 0%, #FFF8E1 100%);
+  color: #1a1a2e;
+}
