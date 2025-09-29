@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { apiService } from '../services/apiService';
 
 export interface Video {
   id: string;
@@ -32,6 +33,9 @@ interface VideoContextType {
   addVideo: (video: Omit<Video, 'id' | 'uploadDate' | 'views' | 'likes' | 'dislikes'>) => void;
   updateVideoStatus: (id: string, status: Video['status']) => void;
   deleteVideo: (id: string) => void;
+  loading: boolean;
+  error: string | null;
+  refreshVideos: () => Promise<void>;
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -44,6 +48,7 @@ export const useVideo = () => {
   return context;
 };
 
+// Fallback mock data in case API fails
 const mockVideos: Video[] = [
   {
     id: '1',
@@ -153,6 +158,31 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [videos, setVideos] = useState<Video[]>(mockVideos);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const refreshVideos = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await apiService.getVideos();
+      if (response.success && response.data) {
+        setVideos(response.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch videos:', err);
+      setError('Failed to load videos from server. Using offline content.');
+      // Keep using mock data as fallback
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load videos on mount
+  useEffect(() => {
+    refreshVideos();
+  }, []);
 
   const getVideoById = (id: string) => videos.find(video => video.id === id);
 
@@ -187,7 +217,10 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     getVideoById,
     addVideo,
     updateVideoStatus,
-    deleteVideo
+    deleteVideo,
+    loading,
+    error,
+    refreshVideos
   };
 
   return (
