@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Premium from './pages/Premium';
 import Rewards from './pages/Rewards';
+import ConnectionTest from './pages/ConnectionTest';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminUsers from './pages/admin/Users';
 import AdminVideos from './pages/admin/Videos';
@@ -25,6 +26,7 @@ function App() {
           <div className="min-h-screen bg-gray-900 text-white">
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/test" element={<ConnectionTest />} />
               <Route path="/admin/*" element={
                 <AdminLayout>
                   <Routes>
