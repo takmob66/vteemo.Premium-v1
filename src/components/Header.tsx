@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, Upload, Bell, User, Menu, Play, Crown, Gift } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useVideo } from '../contexts/VideoContext';
@@ -11,6 +11,7 @@ const Header: React.FC = () => {
   const { searchQuery, setSearchQuery } = useVideo();
   const { t, isRTL } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -26,6 +27,38 @@ const Header: React.FC = () => {
     navigate('/');
   };
 
+  // Debug function for navigation
+  const debugNavigation = (path: string) => {
+    console.log(`🔗 Navigating to: ${path} from ${location.pathname}`);
+  };
+
+  // Custom Link handler with debug
+  const NavigationLink = ({ 
+    to, 
+    children, 
+    className, 
+    title, 
+    onClick 
+  }: { 
+    to: string; 
+    children: React.ReactNode; 
+    className?: string; 
+    title?: string;
+    onClick?: () => void;
+  }) => (
+    <Link
+      to={to}
+      className={className}
+      title={title}
+      onClick={(e) => {
+        debugNavigation(to);
+        if (onClick) onClick();
+      }}
+    >
+      {children}
+    </Link>
+  );
+
   return (
     <header className="bg-gradient-purple border-b border-purple-700/30 px-6 py-3 shadow-lg">
       <div className="flex items-center justify-between">
@@ -33,16 +66,20 @@ const Header: React.FC = () => {
           <button className="p-2 hover:bg-purple-700/50 rounded-lg transition-colors">
             <Menu className="w-5 h-5 text-white" />
           </button>
-          <Link to="/" className={`flex items-center space-x-2 ${isRTL ? 'space-x-reverse' : ''}`}>
+          
+          <NavigationLink 
+            to="/" 
+            className={`flex items-center space-x-2 ${isRTL ? 'space-x-reverse' : ''}`}
+          >
             <div className="relative">
               <Play className="w-8 h-8 text-gold-500 fill-current" />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-500 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <span className="text-xl font-bold text-white">VideoTube</span>
+              <span className="text-xl font-bold text-white">VTEEMO</span>
               <div className="text-xs text-gold-300 font-medium">Premium</div>
             </div>
-          </Link>
+          </NavigationLink>
         </div>
 
         <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-8">
@@ -51,7 +88,7 @@ const Header: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('header.search')}
+              placeholder={t('header.search') || 'Search...'}
               className={`flex-1 px-4 py-2 bg-gray-800/80 border border-purple-600/50 text-white placeholder-gray-400 focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 transition-all ${
                 isRTL ? 'rounded-r-full' : 'rounded-l-full'
               }`}
@@ -70,33 +107,42 @@ const Header: React.FC = () => {
         <div className={`flex items-center space-x-4 ${isRTL ? 'space-x-reverse' : ''}`}>
           <LanguageSelector />
           
+          {/* Test Link - Always visible */}
+          <NavigationLink
+            to="/test"
+            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-xs"
+            title="API Test"
+          >
+            Test
+          </NavigationLink>
+          
           {isAuthenticated ? (
             <>
-              <Link
+              <NavigationLink
                 to="/premium"
                 className="flex items-center space-x-2 px-3 py-2 bg-gradient-gold text-gray-900 rounded-lg hover:shadow-gold transition-all transform hover:scale-105"
-                title={t('sidebar.premium')}
+                title={t('sidebar.premium') || 'Premium'}
               >
                 <Crown className="w-4 h-4" />
-                <span className="font-bold text-sm">{t('sidebar.premium')}</span>
-              </Link>
+                <span className="font-bold text-sm">{t('sidebar.premium') || 'Premium'}</span>
+              </NavigationLink>
               
-              <Link
+              <NavigationLink
                 to="/rewards"
                 className="p-2 hover:bg-purple-700/50 rounded-lg transition-colors relative"
-                title={t('sidebar.rewards')}
+                title={t('sidebar.rewards') || 'Rewards'}
               >
                 <Gift className="w-5 h-5 text-gold-400" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-500 rounded-full animate-pulse"></div>
-              </Link>
+              </NavigationLink>
               
-              <Link
+              <NavigationLink
                 to="/upload"
                 className="p-2 hover:bg-purple-700/50 rounded-lg transition-colors"
-                title={t('header.upload')}
+                title={t('header.upload') || 'Upload'}
               >
                 <Upload className="w-5 h-5 text-white" />
-              </Link>
+              </NavigationLink>
               
               <button className="p-2 hover:bg-purple-700/50 rounded-lg transition-colors relative">
                 <Bell className="w-5 h-5 text-white" />
@@ -109,8 +155,8 @@ const Header: React.FC = () => {
                   className="flex items-center space-x-2 p-1 hover:bg-purple-700/50 rounded-lg transition-colors"
                 >
                   <img
-                    src={user?.avatar}
-                    alt={user?.username}
+                    src={user?.avatar || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100'}
+                    alt={user?.username || 'User'}
                     className="w-8 h-8 rounded-full border-2 border-gold-400"
                   />
                 </button>
@@ -120,31 +166,31 @@ const Header: React.FC = () => {
                     isRTL ? 'left-0' : 'right-0'
                   }`}>
                     <div className="p-3 border-b border-gray-700 bg-gradient-purple-light text-gray-900 rounded-t-lg">
-                      <p className="font-medium">{user?.username}</p>
-                      <p className="text-sm opacity-80">{user?.email}</p>
+                      <p className="font-medium">{user?.username || 'Guest'}</p>
+                      <p className="text-sm opacity-80">{user?.email || 'guest@vteemo.com'}</p>
                     </div>
                     <div className="py-2">
-                      <Link
-                        to={`/profile/${user?.id}`}
+                      <NavigationLink
+                        to={`/profile/${user?.id || '1'}`}
                         className="block px-4 py-2 text-white hover:bg-purple-700/50 transition-colors"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        {t('header.profile')}
-                      </Link>
+                        {t('header.profile') || 'Profile'}
+                      </NavigationLink>
                       {isAdmin && (
-                        <Link
+                        <NavigationLink
                           to="/admin"
                           className="block px-4 py-2 text-white hover:bg-purple-700/50 transition-colors"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          {t('header.admin')}
-                        </Link>
+                          {t('header.admin') || 'Admin'}
+                        </NavigationLink>
                       )}
                       <button
                         onClick={handleLogout}
                         className="block w-full text-left px-4 py-2 text-red-400 hover:bg-purple-700/50 transition-colors"
                       >
-                        {t('header.signout')}
+                        {t('header.signout') || 'Sign Out'}
                       </button>
                     </div>
                   </div>
@@ -152,15 +198,15 @@ const Header: React.FC = () => {
               </div>
             </>
           ) : (
-            <Link
+            <NavigationLink
               to="/login"
               className={`flex items-center space-x-2 px-4 py-2 bg-gradient-gold text-gray-900 rounded-lg hover:shadow-gold transition-all transform hover:scale-105 font-bold ${
                 isRTL ? 'space-x-reverse' : ''
               }`}
             >
               <User className="w-4 h-4" />
-              <span>{t('header.signin')}</span>
-            </Link>
+              <span>{t('header.signin') || 'Sign In'}</span>
+            </NavigationLink>
           )}
         </div>
       </div>
