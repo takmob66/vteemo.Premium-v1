@@ -1,178 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VTEEMO - Premium Video Platform</title>
-    <meta name="description" content="VTEEMO - The ultimate premium video streaming platform">
-    
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="theme-color" content="#6A0DAD">
-    
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #111827;
-            color: white;
-        }
-        
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #6A0DAD 0%, #4B0082 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-        }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid #FFD700;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .loading-text {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .loading-subtitle {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        
-        .emergency-notice {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #ef4444;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            z-index: 10000;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VTEEMO - Premium Video Platform</title>
+  <meta name="description" content="VTEEMO - The ultimate premium video streaming platform" />
+  <meta name="theme-color" content="#6A0DAD" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <style>
+    :root { color-scheme: dark; }
+    body { margin:0; font-family: Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#111827; color:#fff; }
+    #loading-screen { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg,#6A0DAD,#4B0082); z-index:9999; }
+    .loading-spinner { width:50px; height:50px; border:3px solid rgba(255,255,255,.25); border-top:3px solid #FFD700; border-radius:50%; animation:spin 1s linear infinite; margin-bottom:18px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .fade-out { opacity:0; transition:opacity .65s ease; }
+  </style>
 </head>
-<body>
-    <noscript>
-        <div style="text-align: center; padding: 50px; background: #1f2937; color: white; min-height: 100vh;">
-            <h1>JavaScript Required</h1>
-            <p>This application requires JavaScript to run.</p>
-            <p>لطفاً JavaScript مرورگر خود را فعال کنید</p>
-        </div>
-    </noscript>
-    
-    <div id="loading-screen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">VTEEMO</div>
-        <div class="loading-subtitle">Loading...</div>
+<body data-build-date="2025-10-02" data-app="vteemo">
+  <noscript>
+    <div style="background:#1f2937; min-height:100vh; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:Inter,system-ui,sans-serif; padding:40px;">
+      <h1 style="margin:0 0 12px;">JavaScript لازم است</h1>
+      <p style="margin:0; opacity:.85;">برای استفاده از پلتفرم VTEEMO لطفاً JavaScript را فعال کنید.</p>
     </div>
-    
-    <div id="emergency-notice" class="emergency-notice">
-        🚨 Emergency Mode Active
-    </div>
-    
-    <div id="root"></div>
-    
-    <script>
-        console.log('🚀 VTEEMO Starting...');
-        
-        // Try normal mode first, fallback to emergency
-        let emergencyMode = false;
-        
-        // Check for emergency mode trigger
-        if (window.location.hash.includes('emergency') || window.location.search.includes('emergency')) {
-            emergencyMode = true;
-        }
-        
-        // Auto-enable emergency mode after 10 seconds if nothing loads
-        setTimeout(() => {
-            const root = document.getElementById('root');
-            if (!root || root.children.length === 0) {
-                console.log('🚨 Auto-switching to emergency mode');
-                emergencyMode = true;
-                loadEmergencyMode();
-            }
-        }, 10000);
-        
-        function loadEmergencyMode() {
-            console.log('🚨 Loading Emergency Mode');
-            
-            // Show emergency notice
-            const notice = document.getElementById('emergency-notice');
-            if (notice) notice.style.display = 'block';
-            
-            // Update loading text
-            const loadingText = document.querySelector('.loading-text');
-            const loadingSubtitle = document.querySelector('.loading-subtitle');
-            if (loadingText) loadingText.textContent = 'VTEEMO Emergency';
-            if (loadingSubtitle) loadingSubtitle.textContent = 'Loading simplified version...';
-            
-            // Load emergency script
-            const emergencyScript = document.createElement('script');
-            emergencyScript.type = 'module';
-            emergencyScript.src = '/src/main-emergency.tsx';
-            document.head.appendChild(emergencyScript);
-        }
-        
-        // Remove loading screen
-        function removeLoading() {
-            const loading = document.getElementById('loading-screen');
-            if (loading) {
-                loading.style.opacity = '0';
-                loading.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => loading.remove(), 500);
-            }
-        }
-        
-        // Global error handler
-        window.addEventListener('error', function(e) {
-            console.error('❌ App Error:', e.error);
-            if (!emergencyMode) {
-                console.log('🚨 Switching to emergency mode due to error');
-                loadEmergencyMode();
-            }
-        });
-        
-        // Try to load normal app, fallback to emergency
-        if (emergencyMode) {
-            loadEmergencyMode();
-        }
-    </script>
-    
-    <!-- Try normal mode first -->
-    <script type="module" src="/src/main.tsx" onerror="loadEmergencyMode()"></script>
-    
-    <!-- Manual emergency mode trigger -->
-    <script>
-        // Add manual trigger
-        document.addEventListener('keydown', function(e) {
-            // Ctrl + Shift + E for emergency mode
-            if (e.ctrlKey && e.shiftKey && e.key === 'E') {
-                console.log('🚨 Manual emergency mode triggered');
-                window.location.hash = '#emergency';
-                window.location.reload();
-            }
-        });
-    </script>
+  </noscript>
+
+  <div id="loading-screen" aria-label="Loading application">
+    <div class="loading-spinner" role="progressbar" aria-valuetext="Loading"></div>
+    <div style="font-size:24px;font-weight:600;margin-bottom:6px;letter-spacing:.5px;">VTEEMO</div>
+    <div style="font-size:13px;opacity:.8;">Loading...</div>
+  </div>
+
+  <div id="root"></div>
+
+  <script>window.__VTEEMO_LOAD_START = performance.now();</script>
+  <script>
+    window.addEventListener('error', function(ev){
+      const root = document.getElementById('root');
+      const loading = document.getElementById('loading-screen');
+      if (loading) loading.classList.add('fade-out');
+      if (root && !root.hasChildNodes()) {
+        root.innerHTML = `
+          <div style="font-family:Inter,system-ui,sans-serif;max-width:780px;margin:60px auto;padding:32px;line-height:1.6;">
+            <h1 style="color:#FFD700;margin:0 0 12px;font-size:2rem;">خطا در بارگذاری برنامه</h1>
+            <p style="margin:0 0 16px;font-size:1rem;opacity:.85;">بارگذاری رابط کاربری با خطا مواجه شد. لطفاً مجدداً تلاش کنید.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+              <button onclick="location.reload()" style="background:#FFD700;color:#222;border:none;padding:12px 20px;border-radius:8px;font-weight:600;cursor:pointer;">بارگذاری مجدد</button>
+              <button onclick="localStorage.clear();sessionStorage.clear();location.reload();" style="background:#ef4444;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-weight:600;cursor:pointer;">پاکسازی کش و تلاش دوباره</button>
+            </div>
+            <details style="margin-top:26px;font-size:.8rem;opacity:.7;">
+              <summary style="cursor:pointer;font-weight:600;">جزئیات فنی</summary>
+              <pre style="background:#1f2937;padding:14px;border-radius:6px;margin-top:10px;overflow:auto;white-space:pre-wrap;font-family:monospace;">${(ev.error && ev.error.stack) || ev.message || 'No stack trace'}</pre>
+            </details>
+          </div>`;
+      }
+    });
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    setTimeout(()=>{
+      const ls = document.getElementById('loading-screen');
+      if (ls && !document.getElementById('root').children.length){
+        ls.classList.add('fade-out');
+        setTimeout(()=> ls && ls.remove(), 900);
+      }
+    }, 15000);
+  </script>
 </body>
 </html>
